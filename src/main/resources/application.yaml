@@ -1,0 +1,26 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: RESERVATION-SERVICE
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+logging:
+  level:
+    com.codeofus.reservationservice.client: DEBUG
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 5
+        failure-rate-threshold: 40.0f
+        wait-duration-in-open-state: 10S
+        #max-wait-duration-in-half-open-state: 10S
+        permitted-number-of-calls-in-half-open-state: 5
+        sliding-window-type: COUNT_BASED
