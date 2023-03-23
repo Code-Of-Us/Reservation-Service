@@ -2,11 +2,8 @@ package com.codeofus.reservationservice.client;
 
 import com.codeofus.reservationservice.domain.SpotDto;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
-import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
-import lombok.extern.java.Log;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -20,6 +17,7 @@ public interface ParkingConsumer {
 
     @GetMapping("/api/v1/parking")
     @CircuitBreaker(name = "parking", fallbackMethod = "parkingApiNotAvailable")
+    @Retry(name = "parking")
     List<SpotDto> getSpots();
 
     default List<SpotDto> parkingApiNotAvailable(Exception e) {

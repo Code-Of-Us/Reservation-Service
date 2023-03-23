@@ -15,12 +15,19 @@ logging:
     com.codeofus.reservationservice.client: DEBUG
 
 resilience4j:
-  circuitbreaker:
+  retry:
+    retry-aspect-order: 2
     configs:
       default:
-        sliding-window-size: 5
+        max-attempts: 5
+        wait-duration: 2S
+  circuitbreaker:
+    circuit-breaker-aspect-order: 1
+    configs:
+      default:
+        sliding-window-size: 10
         failure-rate-threshold: 40.0f
         wait-duration-in-open-state: 10S
         #max-wait-duration-in-half-open-state: 10S
-        permitted-number-of-calls-in-half-open-state: 5
+        permitted-number-of-calls-in-half-open-state: 10
         sliding-window-type: COUNT_BASED
