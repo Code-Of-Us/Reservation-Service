@@ -16,8 +16,8 @@ public interface ParkingConsumer {
     Logger logger = LoggerFactory.getLogger(ParkingConsumer.class);
 
     @GetMapping("/api/v1/parking")
-    @CircuitBreaker(name = "parking", fallbackMethod = "parkingApiNotAvailable")
-    @Retry(name = "parking")
+    @CircuitBreaker(name = "parking", fallbackMethod = "parkingApiNotPermitted")
+    @Retry(name = "parking", fallbackMethod = "parkingApiNotAvailable")
     List<SpotDto> getSpots();
 
     default List<SpotDto> parkingApiNotAvailable(Exception e) {
@@ -25,7 +25,7 @@ public interface ParkingConsumer {
         return List.of();
     }
 
-    default List<SpotDto> parkingApiNotAvailable(CallNotPermittedException e) {
+    default List<SpotDto> parkingApiNotPermitted(CallNotPermittedException e) {
         logger.debug("Parking Api calling not permitted");
         return List.of();
     }

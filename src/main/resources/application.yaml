@@ -16,13 +16,11 @@ logging:
 
 resilience4j:
   retry:
-    retry-aspect-order: 2
     configs:
       default:
         max-attempts: 5
         wait-duration: 2S
   circuitbreaker:
-    circuit-breaker-aspect-order: 1
     configs:
       default:
         sliding-window-size: 10
