@@ -1,35 +1,62 @@
 package com.codeofus.reservationservice.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SpotDto {
 
     @JsonProperty
-    Integer id;
+    private Integer id;
 
     @JsonProperty
-    String address;
+    private String address;
 
     @JsonProperty
-    LocalDateTime availability;
+    private LocalDateTime availability;
 
     @JsonProperty
-    Integer capacity;
+    private Integer capacity;
 
     @JsonProperty
-    PersonDto renter;
+    private PersonDto renter;
 
     @JsonProperty
-    PersonDto parker;
+    private PersonDto parker;
+
+    public SpotDto() {
+    }
+
+    public SpotDto(Integer id, String address, LocalDateTime availability, Integer capacity, PersonDto renter, PersonDto parker) {
+        this.id = id;
+        this.address = address;
+        this.availability = availability;
+        this.capacity = capacity;
+        this.renter = renter;
+        this.parker = parker;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public String getAddress() {
+        return this.address;
+    }
+
+    public LocalDateTime getAvailability() {
+        return this.availability;
+    }
+
+    public Integer getCapacity() {
+        return this.capacity;
+    }
+
+    public PersonDto getRenter() {
+        return this.renter;
+    }
+
+    public PersonDto getParker() {
+        return this.parker;
+    }
 }

@@ -1,27 +1,44 @@
 package com.codeofus.reservationservice.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PersonDto {
 
     @JsonProperty
-    Integer id;
+    private Integer id;
 
     @JsonProperty
-    String firstName;
+    private String firstName;
 
     @JsonProperty
-    String lastName;
+    private String lastName;
 
     @JsonProperty
-    String registration;
+    private String registration;
+
+    public PersonDto() {
+    }
+
+    public PersonDto(Integer id, String firstName, String lastName, String registration) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.registration = registration;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    public String getRegistration() {
+        return this.registration;
+    }
 }

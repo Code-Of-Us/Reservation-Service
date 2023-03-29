@@ -25,7 +25,7 @@ public class ReservationController {
     }
 
     @GetMapping("/spots")
-    public List<SpotDto> getReservation() {
+    public List<SpotDto> getSpots() {
         return parkingConsumer.getSpots();
     }
 }
