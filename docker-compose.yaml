@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:15
+    environment:
+      POSTGRES_USERNAME: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "reservations"
+    ports:
+      - "5433:5433"
+  eureka:
+    container_name: "eureka_server"
+    image: "ghcr.io/code-of-us/eureka-server:latest"
+    ports:
+      - "8761:8761"

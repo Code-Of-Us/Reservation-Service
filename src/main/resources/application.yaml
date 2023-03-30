@@ -8,7 +8,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/reservations}
     username: ${DATASOURCE_USERNAME:postgres}
-    password: ${DATASOURCE_PASSWORD:password}
+    password: ${DATASOURCE_PASSWORD:postgres}
   jpa:
     properties:
       hibernate:
