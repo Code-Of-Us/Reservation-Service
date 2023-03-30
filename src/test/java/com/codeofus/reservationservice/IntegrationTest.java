@@ -5,6 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -19,7 +20,7 @@ public class IntegrationTest {
 
     static PostgreSQLContainer postgres = new PostgreSQLContainer(POSTGRES_IMAGE);
 
-    static GenericContainer<?> eurekaServer = new GenericContainer<>(EUREKA_IMAGE)
+    static GenericContainer<?> eurekaServer = new GenericContainer<>(DockerImageName.parse(EUREKA_IMAGE))
             .withExposedPorts(EUREKA_PORT);
 
     static {
