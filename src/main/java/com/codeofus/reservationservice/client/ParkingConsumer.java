@@ -1,6 +1,6 @@
 package com.codeofus.reservationservice.client;
 
-import com.codeofus.reservationservice.domain.SpotDto;
+import com.codeofus.reservationservice.dtos.SpotDto;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
