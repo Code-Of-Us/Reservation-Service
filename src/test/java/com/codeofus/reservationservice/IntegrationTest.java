@@ -19,7 +19,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class IntegrationTest {
 
     static String EUREKA_IMAGE = "ghcr.io/code-of-us/eureka-server";
-    static int EUREKA_PORT = 8761;
+    static int EUREKA_PORT = 8080;
     static String POSTGRES_IMAGE = "postgres:14.7-alpine";
 
     static PostgreSQLContainer postgres = new PostgreSQLContainer(POSTGRES_IMAGE);
