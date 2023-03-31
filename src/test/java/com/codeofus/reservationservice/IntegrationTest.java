@@ -29,7 +29,6 @@ public class IntegrationTest {
 
     static {
         postgres.start();
-        eurekaServer.setWaitStrategy(Wait.defaultWaitStrategy().withStartupTimeout(Duration.of(2, ChronoUnit.MINUTES)));
         eurekaServer.start();
         System.setProperty("eureka.client.service-url.defaultZone", "http://" + eurekaServer.getIpAddress() + ":" + eurekaServer.getMappedPort(EUREKA_PORT) + "/eureka");
         System.setProperty("spring.datasource.url", postgres.getJdbcUrl());
