@@ -18,7 +18,7 @@ import static lombok.AccessLevel.PRIVATE;
 @SpringBootTest
 public class IntegrationTest {
 
-    static String EUREKA_IMAGE = "ghcr.io/code-of-us/eureka-server:latest";
+    static String EUREKA_IMAGE = "ghcr.io/code-of-us/eureka-server";
     static int EUREKA_PORT = 8761;
     static String POSTGRES_IMAGE = "postgres:14.7-alpine";
 
