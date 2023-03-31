@@ -30,7 +30,7 @@ public class IntegrationTest {
     static {
         postgres.start();
         eurekaServer.start();
-        System.setProperty("eureka.client.service-url.defaultZone", "http://" + eurekaServer.getIpAddress() + ":" + eurekaServer.getMappedPort(EUREKA_PORT) + "/eureka");
+        System.setProperty("eureka.client.service-url.defaultZone", "http://" + eurekaServer.getHost() + ":" + eurekaServer.getMappedPort(EUREKA_PORT) + "/eureka");
         System.setProperty("spring.datasource.url", postgres.getJdbcUrl());
         System.setProperty("spring.datasource.username", postgres.getUsername());
         System.setProperty("spring.datasource.password", postgres.getPassword());
