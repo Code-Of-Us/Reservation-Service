@@ -15,7 +15,7 @@ repositories {
 
 ext {
 	set('springCloudVersion', "2022.0.1")
-	set('testContainersVersion', "1.17.6")
+	set('testContainersVersion', "1.16.0")
 	set('mapstructVersion', "1.5.3.")
 	set('lombokVersion', "1.18.26")
 }
