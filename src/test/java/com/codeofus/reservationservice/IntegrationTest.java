@@ -8,9 +8,6 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-
 import static lombok.AccessLevel.PRIVATE;
 
 @FieldDefaults(level = PRIVATE, makeFinal = true)
@@ -18,7 +15,7 @@ import static lombok.AccessLevel.PRIVATE;
 @SpringBootTest
 public class IntegrationTest {
 
-    static String EUREKA_IMAGE = "ghcr.io/code-of-us/eureka-server";
+    static String EUREKA_IMAGE = "springcloud/eureka";
     static int EUREKA_PORT = 8761;
     static String POSTGRES_IMAGE = "postgres:14.7-alpine";
 
