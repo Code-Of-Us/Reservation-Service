@@ -35,8 +35,7 @@ public class BaseParkingConsumerIntegrationTest extends IntegrationTest {
 
     protected CircuitBreaker.State getCircuitBreakerStatus() {
         CircuitBreaker circuitBreaker = registry.circuitBreaker(CIRCUIT_BREAKER_NAME);
-        CircuitBreaker.State state = circuitBreaker.getState();
-        return state;
+        return circuitBreaker.getState();
     }
 
     protected void stubGetParkingApiToFailWithStatus(int responseCode) {
