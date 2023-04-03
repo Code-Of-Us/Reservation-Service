@@ -8,7 +8,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/reservations}
     username: ${DATASOURCE_USERNAME:postgres}
-    password: ${DATASOURCE_PASSWORD:postgres}
+    password: ${DATASOURCE_PASSWORD:password}
   jpa:
     properties:
       hibernate:
@@ -36,7 +36,8 @@ resilience4j:
       default:
         sliding-window-size: 10
         failure-rate-threshold: 40.0f
-        wait-duration-in-open-state: 10S
-        #max-wait-duration-in-half-open-state: 10S
+        wait-duration-in-open-state: 60S
+        max-wait-duration-in-half-open-state: 10S
         permitted-number-of-calls-in-half-open-state: 10
+        automatic-transition-from-open-to-half-open-enabled: true
         sliding-window-type: COUNT_BASED
