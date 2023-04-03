@@ -3,23 +3,34 @@ package com.codeofus.reservationservice;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
+import io.github.resilience4j.retry.Retry;
+import io.github.resilience4j.retry.RetryRegistry;
+import io.github.resilience4j.retry.event.RetryEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
-@AutoConfigureWireMock(port = 0)
+@AutoConfigureWireMock
 public class BaseParkingConsumerIntegrationTest extends IntegrationTest {
     protected static String CIRCUIT_BREAKER_NAME = "parking";
-
+    protected static String RETRY_NAME = "parking";
+    List<RetryEvent> retryEvents = new ArrayList<>();
     @Autowired
     private CircuitBreakerRegistry registry;
+    @Autowired
+    private RetryRegistry retryRegistry;
 
     @BeforeEach
     public void setup() {
         WireMock.reset();
         transitionToState(CircuitBreaker.State.CLOSED);
+        configureRetry();
+        retryEvents.clear();
     }
 
     protected void transitionToState(CircuitBreaker.State state) {
@@ -45,4 +56,9 @@ public class BaseParkingConsumerIntegrationTest extends IntegrationTest {
                         .withStatus(responseCode)));
     }
 
+    public void configureRetry() {
+        Retry retry = retryRegistry.retry(RETRY_NAME);
+        retry.getEventPublisher()
+                .onRetry(retryEvents::add);
+    }
 }
