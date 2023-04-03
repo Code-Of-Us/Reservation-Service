@@ -20,8 +20,10 @@ public class BaseParkingConsumerIntegrationTest extends IntegrationTest {
     protected static String CIRCUIT_BREAKER_NAME = "parking";
     protected static String RETRY_NAME = "parking";
     List<RetryEvent> retryEvents = new ArrayList<>();
+
     @Autowired
     private CircuitBreakerRegistry registry;
+
     @Autowired
     private RetryRegistry retryRegistry;
 
@@ -56,7 +58,7 @@ public class BaseParkingConsumerIntegrationTest extends IntegrationTest {
                         .withStatus(responseCode)));
     }
 
-    public void configureRetry() {
+    private void configureRetry() {
         Retry retry = retryRegistry.retry(RETRY_NAME);
         retry.getEventPublisher()
                 .onRetry(retryEvents::add);
