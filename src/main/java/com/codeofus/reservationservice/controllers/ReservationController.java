@@ -1,21 +1,19 @@
 package com.codeofus.reservationservice.controllers;
 
-
 import com.codeofus.reservationservice.client.ParkingConsumer;
 import com.codeofus.reservationservice.domain.Reservation;
+import com.codeofus.reservationservice.dtos.CreateReservationDto;
 import com.codeofus.reservationservice.dtos.ReservationDto;
 import com.codeofus.reservationservice.dtos.SpotDto;
-import com.codeofus.reservationservice.errors.BadRequestException;
+import com.codeofus.reservationservice.errors.BadEntityException;
 import com.codeofus.reservationservice.mappers.ReservationMapper;
 import com.codeofus.reservationservice.services.ReservationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RestController
@@ -30,37 +28,26 @@ public class ReservationController {
     ReservationMapper reservationMapper;
 
     @GetMapping
-    public List<ReservationDto> getAllReservations(Pageable pageable) {
-        return reservationMapper.reservationToReservationDTO(reservationService.getAllReservations(pageable));
+    public Page<ReservationDto> getAllReservations(Pageable pageable) {
+        return reservationService.getAllReservations(pageable).map(reservationMapper::reservationToReservationDTO);
     }
 
     @GetMapping("/{id}")
-    public ReservationDto getReservation(@PathVariable int id) throws BadRequestException {
-        Optional<Reservation> reservation = reservationService.getReservation(id);
-        if (reservation.isPresent()) {
-            return reservationMapper.reservationToReservationDTO(reservation.get());
-        } else {
-            throw new BadRequestException("Reservation does not exist", "reservations", "does-not-exist");
-        }
+    public ReservationDto getReservation(@PathVariable int id) throws BadEntityException {
+        Reservation reservation = reservationService.getReservation(id);
+        return reservationMapper.reservationToReservationDTO(reservation);
     }
 
     @PostMapping
-    public ReservationDto createReservation(@RequestBody ReservationDto reservationDto) throws BadRequestException {
-        if (reservationDto.getId() != null) {
-            throw new BadRequestException("A new reservation cannot already have an ID", "reservations", "id-exists");
-        }
-        Reservation createdReservation = reservationService.createReservation(reservationMapper.reservationDTOtoReservation(reservationDto));
+    public ReservationDto createReservation(@RequestBody CreateReservationDto reservationDto) throws BadEntityException {
+        Reservation createdReservation = reservationService.createReservation(reservationMapper.createOrUpdateDTOtoReservation(reservationDto));
         return reservationMapper.reservationToReservationDTO(createdReservation);
     }
 
     @PutMapping
-    public ReservationDto updateReservation(@RequestBody ReservationDto reservationDto) throws BadRequestException {
-        Optional<Reservation> updatedReservation = reservationService.updateReservation(reservationMapper.reservationDTOtoReservation(reservationDto));
-        if (updatedReservation.isPresent()) {
-            return reservationMapper.reservationToReservationDTO(updatedReservation.get());
-        } else {
-            throw new BadRequestException("An existing reservation must have an ID", "reservations", "id-does-not-exist");
-        }
+    public ReservationDto updateReservation(@RequestBody ReservationDto reservationDto) throws BadEntityException {
+        Reservation updatedReservation = reservationService.updateReservation(reservationMapper.reservationDTOtoReservation(reservationDto));
+        return reservationMapper.reservationToReservationDTO(updatedReservation);
     }
 
     @DeleteMapping("/{id}")
@@ -69,7 +56,7 @@ public class ReservationController {
     }
 
     @GetMapping("/spots")
-    public List<SpotDto> getSpots() {
-        return parkingConsumer.getSpots();
+    public Page<SpotDto> getSpots(Pageable pageable) {
+        return parkingConsumer.getAllSpots(pageable);
     }
 }

@@ -4,15 +4,14 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import static lombok.AccessLevel.PRIVATE;
 
-@FieldDefaults(level = PRIVATE, makeFinal = true)
 @Testcontainers
 @SpringBootTest
+@FieldDefaults(level = PRIVATE, makeFinal = true)
 public class IntegrationTest {
 
     static String EUREKA_IMAGE = "springcloud/eureka";

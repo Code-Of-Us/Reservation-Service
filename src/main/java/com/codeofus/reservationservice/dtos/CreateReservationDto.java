@@ -10,9 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ReservationDto {
-
-    Integer id;
+public class CreateReservationDto {
 
     Integer personId;
 
@@ -24,4 +22,3 @@ public class ReservationDto {
 
     LocalDateTime reservedUntil;
 }
-

@@ -21,14 +21,9 @@ public class SpotDto {
     String address;
 
     @JsonProperty
-    LocalDateTime availability;
-
-    @JsonProperty
-    Integer capacity;
+    String parkingZone;
 
     @JsonProperty
     PersonDto renter;
 
-    @JsonProperty
-    PersonDto parker;
 }

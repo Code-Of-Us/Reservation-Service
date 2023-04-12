@@ -2,10 +2,9 @@ package com.codeofus.reservationservice.mappers;
 
 
 import com.codeofus.reservationservice.domain.Reservation;
+import com.codeofus.reservationservice.dtos.CreateReservationDto;
 import com.codeofus.reservationservice.dtos.ReservationDto;
 import org.mapstruct.Mapper;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ReservationMapper {
@@ -14,8 +13,7 @@ public interface ReservationMapper {
 
     Reservation reservationDTOtoReservation(ReservationDto reservationDto);
 
-    List<ReservationDto> reservationToReservationDTO(List<Reservation> reservations);
-
-    List<Reservation> reservationDTOtoReservation(List<ReservationDto> reservationDtoList);
+    Reservation createOrUpdateDTOtoReservation(CreateReservationDto reservation);
 
 }
+

@@ -14,18 +14,18 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -35,8 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ReservationControllerTests extends IntegrationTest {
 
     static final String RESERVATIONS_API = "/api/v1/reservations";
-    static final ZonedDateTime ZONED_DATE_TIME = ZonedDateTime.of(2023, 12, 3, 10, 15, 30, 0, ZoneId.systemDefault());
-    static final String ZONED_DATE_TIME_STRING = ZONED_DATE_TIME.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+    static final LocalDateTime LOCAL_DATE_TIME = LocalDateTime.of(2023, 12, 3, 10, 15);
+    static final String LOCAL_DATE_TIME_STRING = "2023-12-03T10:15:00";
 
     @Autowired
     MockMvc mockMvc;
@@ -69,7 +69,7 @@ public class ReservationControllerTests extends IntegrationTest {
     }
 
     public ReservationDto createReservationDto() {
-        return ReservationDto.builder().personId(1).spotId(1).createdAt(ZONED_DATE_TIME).build();
+        return ReservationDto.builder().personId(1).spotId(1).createdAt(LOCAL_DATE_TIME).build();
     }
 
     @Test
@@ -91,7 +91,7 @@ public class ReservationControllerTests extends IntegrationTest {
         mockMvc.perform(get(RESERVATIONS_API))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.[*].createdAt").value(hasItem(ZONED_DATE_TIME_STRING)));
+                .andExpect(jsonPath("$.content.[*].createdAt").value(hasItem(LOCAL_DATE_TIME_STRING)));
     }
 
     @Test
@@ -99,7 +99,7 @@ public class ReservationControllerTests extends IntegrationTest {
         mockMvc.perform(get(RESERVATIONS_API + "/{id}", reservation.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.createdAt").value(ZONED_DATE_TIME_STRING));
+                .andExpect(jsonPath("$.createdAt").value(LOCAL_DATE_TIME_STRING));
     }
 
     @Test
@@ -127,13 +127,13 @@ public class ReservationControllerTests extends IntegrationTest {
 
     @Test
     public void testGetSpots() throws Exception {
-        List<SpotDto> spots = List.of(new SpotDto(1, "address", LocalDateTime.now(), 1, null, null));
-        doReturn(spots).when(parkingConsumer).getSpots();
+        Page<SpotDto> spots = new PageImpl<>(List.of(new SpotDto(1, "address")));
+        doReturn(spots).when(parkingConsumer).getAllSpots(any());
 
         mockMvc.perform(get(RESERVATIONS_API + "/spots"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(1))
-                .andExpect(jsonPath("$.[*].address").value("address"));
+                .andExpect(jsonPath("$.content.[*].id").value(1))
+                .andExpect(jsonPath("$.content.[*].address").value("address"));
     }
 }

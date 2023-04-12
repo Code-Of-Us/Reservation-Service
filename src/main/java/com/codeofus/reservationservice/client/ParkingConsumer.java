@@ -7,6 +7,8 @@ import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
@@ -15,18 +17,18 @@ import java.util.List;
 public interface ParkingConsumer {
     Logger logger = LoggerFactory.getLogger(ParkingConsumer.class);
 
-    @GetMapping("/api/v1/parking")
+    @GetMapping("/api/v1/spots")
     @CircuitBreaker(name = "parking", fallbackMethod = "parkingApiNotPermitted")
     @Retry(name = "parking", fallbackMethod = "parkingApiNotAvailable")
-    List<SpotDto> getSpots();
+    Page<SpotDto> getAllSpots(Pageable pageable);
 
-    default List<SpotDto> parkingApiNotAvailable(Exception e) {
+    default Page<SpotDto> parkingApiNotAvailable(Exception e) {
         logger.debug("Parking service is not available");
-        return List.of();
+        return Page.empty();
     }
 
-    default List<SpotDto> parkingApiNotPermitted(CallNotPermittedException e) {
+    default Page<SpotDto> parkingApiNotPermitted(CallNotPermittedException e) {
         logger.debug("Parking Api calling not permitted");
-        return List.of();
+        return Page.empty();
     }
 }

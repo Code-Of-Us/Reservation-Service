@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @Data
@@ -25,9 +26,10 @@ public class Reservation {
     @Column(name = "spot_id")
     Integer spotId;
 
-    ZonedDateTime createdAt;
-    ZonedDateTime reservedFrom;
-    ZonedDateTime reservedUntil;
+    LocalDateTime createdAt;
+    LocalDateTime reservedFrom;
+    LocalDateTime reservedUntil;
+
 
     public Reservation updateReservation(Reservation reservation) {
         this.personId = reservation.getPersonId();
