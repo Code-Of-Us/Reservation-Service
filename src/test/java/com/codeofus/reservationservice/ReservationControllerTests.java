@@ -127,7 +127,7 @@ public class ReservationControllerTests extends IntegrationTest {
 
     @Test
     public void testGetSpots() throws Exception {
-        Page<SpotDto> spots = new PageImpl<>(List.of(new SpotDto(1, "address")));
+        Page<SpotDto> spots = new PageImpl<>(List.of(new SpotDto(1, "address", "2.1", null)));
         doReturn(spots).when(parkingConsumer).getAllSpots(any());
 
         mockMvc.perform(get(RESERVATIONS_API + "/spots"))
