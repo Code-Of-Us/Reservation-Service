@@ -18,6 +18,7 @@ ext {
 	set('testContainersVersion', "1.16.0")
 	set('mapstructVersion', "1.5.3.")
 	set('lombokVersion', "1.18.26")
+	set('wireMockVersion', "4.0.1")
 }
 
 dependencies {
@@ -37,7 +38,7 @@ dependencies {
 	testImplementation "org.testcontainers:testcontainers:${testContainersVersion}"
 	testImplementation "org.testcontainers:junit-jupiter:${testContainersVersion}"
 	testImplementation "org.testcontainers:postgresql:${testContainersVersion}"
-	testImplementation('org.springframework.cloud:spring-cloud-contract-wiremock:4.0.1')
+	testImplementation "org.springframework.cloud:spring-cloud-contract-wiremock:${wireMockVersion}"
 
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor "org.projectlombok:lombok"
