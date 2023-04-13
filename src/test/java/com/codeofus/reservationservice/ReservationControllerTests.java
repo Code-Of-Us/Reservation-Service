@@ -6,6 +6,7 @@ import com.codeofus.reservationservice.dtos.ReservationDto;
 import com.codeofus.reservationservice.dtos.SpotDto;
 import com.codeofus.reservationservice.mappers.ReservationMapper;
 import com.codeofus.reservationservice.repositories.ReservationRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,17 +19,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -36,7 +38,6 @@ public class ReservationControllerTests extends IntegrationTest {
 
     static final String RESERVATIONS_API = "/api/v1/reservations";
     static final LocalDateTime LOCAL_DATE_TIME = LocalDateTime.of(2023, 12, 3, 10, 15);
-    static final String LOCAL_DATE_TIME_STRING = "2023-12-03T10:15:00";
 
     @Autowired
     MockMvc mockMvc;
@@ -88,18 +89,27 @@ public class ReservationControllerTests extends IntegrationTest {
 
     @Test
     public void testGetAll() throws Exception {
-        mockMvc.perform(get(RESERVATIONS_API))
+        MvcResult result = mockMvc.perform(get(RESERVATIONS_API))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.content.[*].createdAt").value(hasItem(LOCAL_DATE_TIME_STRING)));
+                .andReturn();
+        String jsonResponse = result.getResponse().getContentAsString();
+        Page<ReservationDto> reservations = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
+        List<ReservationDto> content = reservations.getContent();
+
+        assertThat(content).containsExactly(reservationMapper.reservationToReservationDTO(reservation));
     }
 
     @Test
     public void testGetReservation() throws Exception {
-        mockMvc.perform(get(RESERVATIONS_API + "/{id}", reservation.getId()))
+        MvcResult result = mockMvc.perform(get(RESERVATIONS_API + "/{id}", reservation.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.createdAt").value(LOCAL_DATE_TIME_STRING));
+                .andReturn();
+        String jsonResponse = result.getResponse().getContentAsString();
+        ReservationDto reservationDto = objectMapper.readValue(jsonResponse, ReservationDto.class);
+
+        assertThat(reservationDto).isEqualTo(reservationMapper.reservationToReservationDTO(reservation));
     }
 
     @Test
@@ -127,13 +137,19 @@ public class ReservationControllerTests extends IntegrationTest {
 
     @Test
     public void testGetSpots() throws Exception {
-        Page<SpotDto> spots = new PageImpl<>(List.of(new SpotDto(1, "address", "2.1", null)));
+        SpotDto spotDto = new SpotDto(1, "address", "2.1", null);
+        Page<SpotDto> spots = new PageImpl<>(List.of(spotDto));
+
         doReturn(spots).when(parkingConsumer).getAllSpots(any());
 
-        mockMvc.perform(get(RESERVATIONS_API + "/spots"))
+        MvcResult result = mockMvc.perform(get(RESERVATIONS_API + "/spots"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.content.[*].id").value(1))
-                .andExpect(jsonPath("$.content.[*].address").value("address"));
+                .andReturn();
+        String jsonResponse = result.getResponse().getContentAsString();
+        Page<SpotDto> spotPage = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
+        List<SpotDto> content = spotPage.getContent();
+
+        assertThat(content).containsExactly(spotDto);
     }
 }

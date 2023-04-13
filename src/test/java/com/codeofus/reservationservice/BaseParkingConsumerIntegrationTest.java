@@ -17,7 +17,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 @AutoConfigureWireMock
 public class BaseParkingConsumerIntegrationTest extends IntegrationTest {
-    protected static String CIRCUIT_BREAKER_NAME = "parking";
+    protected static String PARKING_CIRCUIT_BREAKER_NAME = "parking";
     protected static String RETRY_NAME = "parking";
     List<RetryEvent> retryEvents = new ArrayList<>();
 
@@ -30,13 +30,13 @@ public class BaseParkingConsumerIntegrationTest extends IntegrationTest {
     @BeforeEach
     public void setup() {
         WireMock.reset();
-        transitionToState(CircuitBreaker.State.CLOSED);
+        transitionToState(PARKING_CIRCUIT_BREAKER_NAME, CircuitBreaker.State.CLOSED);
         configureRetry();
         retryEvents.clear();
     }
 
-    protected void transitionToState(CircuitBreaker.State state) {
-        CircuitBreaker circuitBreaker = registry.circuitBreaker(CIRCUIT_BREAKER_NAME);
+    protected void transitionToState(String circuitBreakerName, CircuitBreaker.State state) {
+        CircuitBreaker circuitBreaker = registry.circuitBreaker(circuitBreakerName);
         if (circuitBreaker.getState() != state) {
             switch (state) {
                 case OPEN -> circuitBreaker.transitionToOpenState();
@@ -46,8 +46,8 @@ public class BaseParkingConsumerIntegrationTest extends IntegrationTest {
         }
     }
 
-    protected CircuitBreaker.State getCircuitBreakerStatus() {
-        CircuitBreaker circuitBreaker = registry.circuitBreaker(CIRCUIT_BREAKER_NAME);
+    protected CircuitBreaker.State getCircuitBreakerStatus(String circuitBreakerName) {
+        CircuitBreaker circuitBreaker = registry.circuitBreaker(circuitBreakerName);
         return circuitBreaker.getState();
     }
 
