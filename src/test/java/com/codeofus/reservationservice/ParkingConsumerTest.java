@@ -17,7 +17,7 @@ public class ParkingConsumerTest extends BaseParkingConsumerIntegrationTest {
     MockMvc mockMvc;
 
     @Test
-    public void testCircuitBreakerClosedState() throws Exception {
+    public void testCircuitBreakerTransitionToOpenStateFromClosedState() throws Exception {
         stubGetParkingApiToFailWithStatus(503);
         for (int i = 1; i <= 10; i++) {
             mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/reservations/spots"));
@@ -27,7 +27,7 @@ public class ParkingConsumerTest extends BaseParkingConsumerIntegrationTest {
     }
 
     @Test
-    public void testCircuitBreakerMoveToHalfOpenState() throws InterruptedException {
+    public void testCircuitBreakerTransitionToHalfOpenStateFromOpenState() throws InterruptedException {
         transitionToState(CircuitBreaker.State.OPEN);
         TimeUnit.SECONDS.sleep(61);
 
@@ -35,7 +35,7 @@ public class ParkingConsumerTest extends BaseParkingConsumerIntegrationTest {
     }
 
     @Test
-    public void testCircuitBreakerMoveToOpenState() throws Exception {
+    public void testCircuitBreakerTransitionsToOpenStateAfterHalfOpenState() throws Exception {
         stubGetParkingApiToFailWithStatus(503);
         for (int i = 1; i <= 20; i++) {
             mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/reservations/spots"));
