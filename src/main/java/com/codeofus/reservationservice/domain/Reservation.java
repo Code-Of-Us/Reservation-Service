@@ -20,10 +20,8 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @Column(name = "person_id")
     Integer personId;
 
-    @Column(name = "spot_id")
     Integer spotId;
 
     LocalDateTime createdAt;

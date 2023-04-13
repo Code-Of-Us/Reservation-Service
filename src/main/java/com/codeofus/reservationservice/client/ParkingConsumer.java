@@ -18,7 +18,7 @@ public interface ParkingConsumer {
     Logger logger = LoggerFactory.getLogger(ParkingConsumer.class);
 
     @GetMapping("/api/v1/spots")
-    @CircuitBreaker(name = "parking", fallbackMethod = "parkingApiNotPermitted")
+    @CircuitBreaker(name = "parking", fallbackMethod = "parkingApiNotAllowed")
     @Retry(name = "parking", fallbackMethod = "parkingApiNotAvailable")
     Page<SpotDto> getAllSpots(Pageable pageable);
 
@@ -27,8 +27,8 @@ public interface ParkingConsumer {
         return Page.empty();
     }
 
-    default Page<SpotDto> parkingApiNotPermitted(CallNotPermittedException e) {
-        logger.debug("Parking Api calling not permitted");
+    default Page<SpotDto> parkingApiNotAllowed(CallNotPermittedException e) {
+        logger.debug("Parking Api calling not allowed");
         return Page.empty();
     }
 }

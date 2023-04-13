@@ -5,7 +5,6 @@ import com.codeofus.reservationservice.domain.Reservation;
 import com.codeofus.reservationservice.dtos.CreateReservationDto;
 import com.codeofus.reservationservice.dtos.ReservationDto;
 import com.codeofus.reservationservice.dtos.SpotDto;
-import com.codeofus.reservationservice.errors.BadEntityException;
 import com.codeofus.reservationservice.mappers.ReservationMapper;
 import com.codeofus.reservationservice.services.ReservationService;
 import lombok.AccessLevel;
@@ -33,19 +32,19 @@ public class ReservationController {
     }
 
     @GetMapping("/{id}")
-    public ReservationDto getReservation(@PathVariable int id) throws BadEntityException {
+    public ReservationDto getReservation(@PathVariable int id) {
         Reservation reservation = reservationService.getReservation(id);
         return reservationMapper.reservationToReservationDTO(reservation);
     }
 
     @PostMapping
-    public ReservationDto createReservation(@RequestBody CreateReservationDto reservationDto) throws BadEntityException {
+    public ReservationDto createReservation(@RequestBody CreateReservationDto reservationDto) {
         Reservation createdReservation = reservationService.createReservation(reservationMapper.createOrUpdateDTOtoReservation(reservationDto));
         return reservationMapper.reservationToReservationDTO(createdReservation);
     }
 
     @PutMapping
-    public ReservationDto updateReservation(@RequestBody ReservationDto reservationDto) throws BadEntityException {
+    public ReservationDto updateReservation(@RequestBody ReservationDto reservationDto) {
         Reservation updatedReservation = reservationService.updateReservation(reservationMapper.reservationDTOtoReservation(reservationDto));
         return reservationMapper.reservationToReservationDTO(updatedReservation);
     }

@@ -1,11 +1,7 @@
 package com.codeofus.reservationservice.dtos;
 
-import com.codeofus.reservationservice.dtos.PersonDto;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -14,16 +10,12 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SpotDto {
 
-    @JsonProperty
     Integer id;
 
-    @JsonProperty
     String address;
 
-    @JsonProperty
     String parkingZone;
 
-    @JsonProperty
     PersonDto renter;
 
 }
