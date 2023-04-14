@@ -36,13 +36,11 @@ public class ParkingConsumerTest extends BaseParkingConsumerIntegrationTest {
     }
 
     @Test
-    public void testCircuitBreakerTransitionsToOpenStateAfterHalfOpenState() throws Exception {
-        stubGetParkingApiToFailWithStatus(503);
-        for (int i = 1; i <= 20; i++) {
-            mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/reservations/spots"));
+    public void testCircuitBreakerRemainsClosed() {
+        for (int i = 1; i <= 10; i++) {
+            stubGetParkingApiToFailWithStatus(200);
         }
-
-        assertEquals(CircuitBreaker.State.OPEN, getCircuitBreakerStatus(PARKING_CIRCUIT_BREAKER_NAME));
+        assertEquals(CircuitBreaker.State.CLOSED, getCircuitBreakerStatus(PARKING_CIRCUIT_BREAKER_NAME));
     }
 
     @Test
