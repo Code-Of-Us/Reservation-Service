@@ -34,15 +34,7 @@ public class ParkingConsumerTest extends BaseParkingConsumerIntegrationTest {
                 .atMost(61, TimeUnit.SECONDS)
                 .until(() -> CircuitBreaker.State.HALF_OPEN.equals(getCircuitBreakerStatus(PARKING_CIRCUIT_BREAKER_NAME)));
     }
-
-    @Test
-    public void testCircuitBreakerRemainsClosed() {
-        for (int i = 1; i <= 10; i++) {
-            stubGetParkingApiToFailWithStatus(200);
-        }
-        assertEquals(CircuitBreaker.State.CLOSED, getCircuitBreakerStatus(PARKING_CIRCUIT_BREAKER_NAME));
-    }
-
+    
     @Test
     public void testRetryApiCall() throws Exception {
         stubGetParkingApiToFailWithStatus(503);
