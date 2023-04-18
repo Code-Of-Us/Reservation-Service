@@ -41,3 +41,7 @@ resilience4j:
         permitted-number-of-calls-in-half-open-state: 10
         automatic-transition-from-open-to-half-open-enabled: true
         sliding-window-type: COUNT_BASED
+
+parking:
+  client:
+    url: ${PARKING_CLIENT_URL:localhost:8080}

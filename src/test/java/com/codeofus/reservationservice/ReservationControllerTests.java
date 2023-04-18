@@ -1,6 +1,7 @@
 package com.codeofus.reservationservice;
 
 import com.codeofus.reservationservice.client.ParkingConsumer;
+import com.codeofus.reservationservice.client.SpotDtoStub;
 import com.codeofus.reservationservice.domain.Reservation;
 import com.codeofus.reservationservice.dtos.ReservationDto;
 import com.codeofus.reservationservice.dtos.SpotDto;
@@ -137,8 +138,7 @@ public class ReservationControllerTests extends IntegrationTest {
 
     @Test
     public void testGetSpots() throws Exception {
-        SpotDto spotDto = new SpotDto(1, "address", "2.1", null);
-        Page<SpotDto> spots = new PageImpl<>(List.of(spotDto));
+        Page<SpotDto> spots = new PageImpl<>(List.of(SpotDtoStub.createSpotStub()));
 
         doReturn(spots).when(parkingConsumer).getAllSpots(any());
 
@@ -150,6 +150,6 @@ public class ReservationControllerTests extends IntegrationTest {
         Page<SpotDto> spotPage = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
         List<SpotDto> content = spotPage.getContent();
 
-        assertThat(content).containsExactly(spotDto);
+        assertThat(content).containsExactly(SpotDtoStub.createSpotStub());
     }
 }

@@ -11,9 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.List;
-
-@FeignClient(name = "PARKING-SERVICE")
+@FeignClient(name = "PARKING-SERVICE", url = "${parking.client.url}")
 public interface ParkingConsumer {
     Logger logger = LoggerFactory.getLogger(ParkingConsumer.class);
 

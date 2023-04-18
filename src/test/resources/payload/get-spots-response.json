@@ -1,0 +1,23 @@
+{
+  "content": [
+    {
+      "id": 1,
+      "address": "Franje wolfla",
+      "parkingZone": "1",
+      "renter": {
+        "id": 7,
+        "firstName": "ivona",
+        "lastName": "raguz",
+        "registration": "ZG 3075-IS"
+      }
+    }
+  ],
+  "number": 0,
+  "size": 20,
+  "totalElements": 1,
+  "first": true,
+  "last": true,
+  "totalPages": 1,
+  "numberOfElements": 1,
+  "hasContent": true
+}

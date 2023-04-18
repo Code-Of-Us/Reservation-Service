@@ -33,6 +33,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}Final"
 	implementation "org.mapstruct:mapstruct-processor:${mapstructVersion}Final"
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation "org.testcontainers:testcontainers:${testContainersVersion}"

@@ -1,6 +1,6 @@
-package com.codeofus.reservationservice;
+package com.codeofus.reservationservice.client.parking;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
+import com.codeofus.reservationservice.IntegrationTest;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.github.resilience4j.retry.Retry;
@@ -8,28 +8,25 @@ import io.github.resilience4j.retry.RetryRegistry;
 import io.github.resilience4j.retry.event.RetryEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-
+@AutoConfigureMockMvc
 @AutoConfigureWireMock
 public class BaseParkingConsumerIntegrationTest extends IntegrationTest {
     protected static String PARKING_CIRCUIT_BREAKER_NAME = "parking";
     protected static String RETRY_NAME = "parking";
     List<RetryEvent> retryEvents = new ArrayList<>();
-
     @Autowired
-    private CircuitBreakerRegistry registry;
-
+    CircuitBreakerRegistry registry;
     @Autowired
-    private RetryRegistry retryRegistry;
+    RetryRegistry retryRegistry;
 
     @BeforeEach
     public void setup() {
-        WireMock.reset();
         transitionToState(PARKING_CIRCUIT_BREAKER_NAME, CircuitBreaker.State.CLOSED);
         configureRetry();
         retryEvents.clear();
@@ -49,13 +46,6 @@ public class BaseParkingConsumerIntegrationTest extends IntegrationTest {
     protected CircuitBreaker.State getCircuitBreakerStatus(String circuitBreakerName) {
         CircuitBreaker circuitBreaker = registry.circuitBreaker(circuitBreakerName);
         return circuitBreaker.getState();
-    }
-
-    protected void stubGetParkingApiToFailWithStatus(int responseCode) {
-        stubFor(get(urlPathEqualTo("/api/v1/parking"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withStatus(responseCode)));
     }
 
     private void configureRetry() {
