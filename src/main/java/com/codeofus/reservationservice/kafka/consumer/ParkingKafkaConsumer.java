@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -20,12 +21,11 @@ import java.time.ZoneOffset;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ParkingKafkaConsumer {
-    static final String RESERVATION_TOPIC = "reservations";
     Logger logger = LoggerFactory.getLogger(ParkingKafkaConsumer.class);
 
     ReservationService reservationService;
 
-    @KafkaListener(topics = RESERVATION_TOPIC)
+    @KafkaListener(topics = "${spring.kafka.reservation-topic}")
     public void consume(ConsumerRecord<String, ReservationDto> record) {
         ReservationDto reservationMessage = record.value();
         logger.info("Message received: {}", reservationMessage);

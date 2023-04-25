@@ -26,6 +26,7 @@ ext {
 	set('kafkaSchemaRegistryVersion', "7.0.1")
 	set('avroVersion', "1.11.0")
 	set('avroSerializerVersion', "6.2.1")
+	set('kafkaTestContainerVersion', "1.17.6")
 }
 
 dependencies {
@@ -55,6 +56,8 @@ dependencies {
 	testImplementation "org.testcontainers:junit-jupiter:${testContainersVersion}"
 	testImplementation "org.testcontainers:postgresql:${testContainersVersion}"
 	testImplementation "org.springframework.cloud:spring-cloud-contract-wiremock:${wireMockVersion}"
+	testImplementation "org.springframework.kafka:spring-kafka-test"
+	testImplementation "org.testcontainers:kafka:${kafkaTestContainerVersion}"
 
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor "org.projectlombok:lombok"
