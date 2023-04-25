@@ -15,18 +15,10 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-  kafka:
-    properties:
-      sasl:
-        mechanism: PLAIN
-        jaas:
-          config: org.apache.kafka.common.security.plain.PlainLoginModule required username='7QUPJL4WYN6QCQ73' password='JMfgGPuvsOO2ZobI+lFhtbz45N1tIwL/l6NfjhBEadCU5eDZuhz9Wgr0CRrYbqBv';
-      bootstrap:
-        servers: pkc-ymrq7.us-east-2.aws.confluent.cloud:9092
-      security:
-        protocol: SASL_SSL
-    consumer:
-      group-id: parking-consumer
+  cloud:
+    config:
+      uri: ${CONFIG_SERVER_URL:localhost:8888}
+      name: ${CONFIG_SERVER_FILE:kafka-docker}
 
 eureka:
   client:

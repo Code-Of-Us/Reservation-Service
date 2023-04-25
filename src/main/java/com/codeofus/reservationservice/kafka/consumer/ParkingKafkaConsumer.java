@@ -1,37 +1,51 @@
 package com.codeofus.reservationservice.kafka.consumer;
 
-import com.codeofus.reservationservice.dtos.ReservationDto;
-import com.codeofus.reservationservice.mappers.ReservationMapper;
+import com.codeofus.reservations.ReservationDto;
+import com.codeofus.reservationservice.domain.Reservation;
 import com.codeofus.reservationservice.services.ReservationService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 @Component
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ParkingKafkaConsumer {
-    private final Logger logger = LoggerFactory.getLogger(ParkingKafkaConsumer.class);
-    private static final String RESERVATION_TOPIC = "reservations";
+    static final String RESERVATION_TOPIC = "reservations";
+    Logger logger = LoggerFactory.getLogger(ParkingKafkaConsumer.class);
 
-    private final ReservationService reservationService;
-
-    private final ReservationMapper reservationMapper;
-
-    private final ObjectMapper objectMapper;
-
-    public ParkingKafkaConsumer(ReservationService reservationService, ReservationMapper reservationMapper, ObjectMapper objectMapper) {
-        this.reservationService = reservationService;
-        this.reservationMapper = reservationMapper;
-        this.objectMapper = objectMapper;
-    }
+    ReservationService reservationService;
 
     @KafkaListener(topics = RESERVATION_TOPIC)
-    public void consume(String message) throws JsonProcessingException {
-        logger.info(String.format("Message received -> %s", message));
-        ReservationDto reservationDto = objectMapper.readValue(message, ReservationDto.class);
-        reservationService.createReservation(reservationMapper.reservationDTOtoReservation(reservationDto));
-        logger.info("Message consumed..");
+    public void consume(ConsumerRecord<String, ReservationDto> record) {
+        ReservationDto reservationMessage = record.value();
+        logger.info("Message received: {}", reservationMessage);
+
+        Reservation reservationToSave = createReservationFromAvroDto(reservationMessage);
+        reservationService.createReservation(reservationToSave);
+        logger.info("Message consumed: {}", reservationMessage);
+    }
+
+    private LocalDateTime instantToLocalDateTime(Instant instant) {
+        return instant != null ? LocalDateTime.ofInstant(instant, ZoneOffset.UTC) : null;
+    }
+
+    private Reservation createReservationFromAvroDto(ReservationDto reservationMessage) {
+        return Reservation.builder()
+                .personId(reservationMessage.getPersonId())
+                .spotId(reservationMessage.getSpotId())
+                .createdAt(instantToLocalDateTime(reservationMessage.getCreatedAt()))
+                .reservedFrom(instantToLocalDateTime(reservationMessage.getReservedFrom()))
+                .reservedUntil(instantToLocalDateTime(reservationMessage.getReservedUntil()))
+                .build();
     }
 }
