@@ -56,8 +56,6 @@ dependencies {
 	testImplementation "org.testcontainers:junit-jupiter:${testContainersVersion}"
 	testImplementation "org.testcontainers:postgresql:${testContainersVersion}"
 	testImplementation "org.springframework.cloud:spring-cloud-contract-wiremock:${wireMockVersion}"
-	testImplementation "org.springframework.kafka:spring-kafka-test"
-	testImplementation "org.testcontainers:kafka:${kafkaTestContainerVersion}"
 
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor "org.projectlombok:lombok"

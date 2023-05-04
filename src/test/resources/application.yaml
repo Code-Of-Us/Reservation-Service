@@ -11,6 +11,19 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+  kafka:
+    properties:
+      schema:
+        registry.url: mock://test
+    reservation-topic: reservations
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      group-id: parking-consumer
+      properties:
+        specific:
+          avro:
+            reader: "true"
 
 resilience4j:
   retry:
@@ -28,15 +41,3 @@ resilience4j:
         permitted-number-of-calls-in-half-open-state: 10
         automatic-transition-from-open-to-half-open-enabled: true
         sliding-window-type: COUNT_BASED
-
-spring:
-  kafka:
-    reservation-topic: reservations
-    consumer:
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
-      group-id: parking-consumer
-      properties:
-        specific:
-          avro:
-            reader: "true"
