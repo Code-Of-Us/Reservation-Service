@@ -15,6 +15,10 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+  cloud:
+    config:
+      uri: ${CONFIG_SERVER_URL:localhost:8888}
+      name: ${CONFIG_SERVER_FILE:kafka-docker}
 
 eureka:
   client:

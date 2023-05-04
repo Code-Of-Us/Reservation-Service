@@ -1,7 +1,10 @@
+import com.github.davidmc24.gradle.plugin.avro.GenerateAvroJavaTask
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.0.4'
 	id 'io.spring.dependency-management' version '1.1.0'
+	id 'com.github.davidmc24.gradle.plugin.avro' version '1.4.0'
 }
 
 group = 'com.codeofus'
@@ -11,6 +14,7 @@ sourceCompatibility = '17'
 repositories {
 	mavenCentral()
 	maven { url 'https://artifactory-oss.prod.netflix.net/artifactory/maven-oss-candidates' }
+	maven { url = uri("https://packages.confluent.io/maven/") }
 }
 
 ext {
@@ -19,6 +23,10 @@ ext {
 	set('mapstructVersion', "1.5.3.")
 	set('lombokVersion', "1.18.26")
 	set('wireMockVersion', "4.0.1")
+	set('kafkaSchemaRegistryVersion', "7.0.1")
+	set('avroVersion', "1.11.0")
+	set('avroSerializerVersion', "6.2.1")
+	set('kafkaTestContainerVersion', "1.17.6")
 }
 
 dependencies {
@@ -34,6 +42,14 @@ dependencies {
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}Final"
 	implementation "org.mapstruct:mapstruct-processor:${mapstructVersion}Final"
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1'
+
+	implementation 'org.springframework.kafka:spring-kafka'
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+
+	implementation "io.confluent:kafka-schema-registry-client:${kafkaSchemaRegistryVersion}"
+	implementation "org.apache.avro:avro:${avroVersion}"
+	implementation "io.confluent:kafka-avro-serializer:${avroSerializerVersion}"
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation "org.testcontainers:testcontainers:${testContainersVersion}"
@@ -54,4 +70,13 @@ dependencyManagement {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+def generateAvro = tasks.register("generateAvro",  GenerateAvroJavaTask){
+	source 'src/main/avro'
+	outputDir = file("$buildDir/generated-sources/avro")
+}
+
+tasks.named("compileJava") {
+	dependsOn generateAvro
 }
