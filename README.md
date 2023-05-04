@@ -6,7 +6,6 @@
 ![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Code-Of-Us_Rent-a-Park&metric=bugs)
 ![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Code-Of-Us_Rent-a-Park&metric=vulnerabilities)
 
-### Technologies:
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
 
